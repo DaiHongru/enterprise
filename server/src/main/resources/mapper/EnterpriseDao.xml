@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.freework.enterprise.dao.EnterpriseDao">
+
+    <select id="loginEnterprise" resultType="com.freework.enterprise.entity.Enterprise">
+        SELECT
+        enterprise_id, enterprise_category_id, enterprise_name, priority, status, email, email_status, phone, password,
+        address, logo, official_website, official_website_status, introduce, create_time, last_edit_time
+        FROM
+        tb_enterprise
+        WHERE
+        phone=#{phone} AND password=#{password}
+    </select>
+
+    <select id="queryEnterpriseByRequirement" resultType="com.freework.enterprise.entity.Enterprise">
+        SELECT
+        enterprise_id, enterprise_category_id, enterprise_name, priority, status, email, email_status, phone, password,
+        address, logo, official_website, official_website_status, introduce, create_time, last_edit_time
+        FROM
+        tb_enterprise
+        <where>
+            <if test="phone != null">
+                AND phone=#{phone}
+            </if>
+            <if test="enterpriseId != null ">
+                AND enterprise_id = #{enterpriseId}
+            </if>
+            <if test="status != null ">
+                AND status = #{status}
+            </if>
+            <if test="enterpriseName != null ">
+                AND enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName}), '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="registerEnterprise" useGeneratedKeys="true"
+            keyProperty="enterpriseId" keyColumn="enterpriseId">
+        INSERT INTO
+        tb_enterprise(
+        enterprise_category_id,
+        enterprise_name,
+        status,
+        email,
+        email_status,
+        phone,
+        password,
+        address,
+        create_time,
+        last_edit_time
+        ) VALUES (
+        #{enterpriseCategoryId},
+        #{enterpriseName},
+        #{status},
+        #{email},
+        #{emailStatus},
+        #{phone},
+        #{password},
+        #{address},
+        #{createTime},
+        #{lastEditTime}
+        )
+    </insert>
+
+    <select id="queryEmailOrPhoneExist" resultType="com.freework.enterprise.entity.Enterprise"
+            parameterType="com.freework.enterprise.entity.Enterprise">
+        SELECT
+        enterprise_id
+        FROM
+        tb_enterprise
+        <where>
+            <if test="email !=null">
+                AND email=#{email}
+            </if>
+            <if test="phone !=null">
+                AND phone=#{phone}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateEmailStatus" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        email_status = #{emailStatus},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updatePassword" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        password = #{password},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        phone=#{phone}
+    </update>
+
+    <update id="updateLogo" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        logo = #{logo},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updateAddress" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        address = #{address},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updateOfficialWebsite" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        official_website = #{officialWebsite},
+        official_website_status=#{officialWebsiteStatus},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updateEnterpriseCategory" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        enterprise_category_id = #{enterpriseCategoryId},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updateEnterpriseIntroduce" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        introduce = #{introduce},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updatePhone" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        phone = #{phone},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <update id="updateEmail" parameterType="com.freework.enterprise.entity.Enterprise">
+        UPDATE
+        tb_enterprise
+        SET
+        email = #{email},
+        email_status = #{emailStatus},
+        last_edit_time=#{lastEditTime}
+        WHERE
+        enterprise_id=#{enterpriseId}
+    </update>
+
+    <select id="queryEnterpriseAll" resultType="com.freework.enterprise.entity.Enterprise">
+        SELECT
+        enterprise_id, enterprise_category_id, enterprise_name, priority, status, email, email_status, phone, password, address, logo, official_website, official_website_status, introduce, create_time, last_edit_time
+        FROM
+        tb_enterprise
+        WHERE
+        status=1
+        ORDER BY priority DESC
+    </select>
+</mapper>
